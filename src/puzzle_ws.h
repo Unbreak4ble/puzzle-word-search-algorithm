@@ -153,10 +153,11 @@ words_t findwords_t(Table table, vecstr array){
          highest_len = get_highestlen(array),
          lowest_len = get_lowestlen(array),
          *XY_t = toXY_t(table, table.totalsize/sizeof(char));
-    
+          table.v = XY_t[1];
+          table.h = XY_t[0];
     if(highest_len > 0 && lowest_len > 0 && words_len > 0)
-    for(int i = 0; i < XY_t[0]; i++){
-    	for(int j=0; j< XY_t[1]; j++){
+    for(int i = 0; i < table.v; i++){
+    	for(int j=0; j< table.h; j++){
     	     while(current_slide < 8){
     	      if(i+slide_i[current_slide][0] >= 0 && j+slide_i[current_slide][1] >= 0){
                  string currentstr = makestr("");
@@ -165,7 +166,9 @@ words_t findwords_t(Table table, vecstr array){
                  	const int slide_i_cp[8][2] = {{0, toNeg(cp_b)}, {0, cp_b}, {cp_b, 0}, { toNeg(cp_b), 0}, {cp_b, toNeg(cp_b)}, {cp_b, cp_b}, {toNeg(cp_b), toNeg(cp_b)}, {toNeg(cp_b), cp_b}};
                  	char c = get_tval(table, i+slide_i_cp[current_slide][0], j+slide_i_cp[current_slide][1]);
                  	appendchar(&currentstr, c);
-                      if(cp_b >= lowest_len-1)
+                     
+                     int* xy_tt = toXY_t(table, (i+slide_i_cp[current_slide][0])*table.v+(j+slide_i_cp[current_slide][1]));
+                      if((i+slide_i_cp[current_slide][0] < table.v && j+slide_i_cp[current_slide][1] < table.h) && (xy_tt[0] != -1 && xy_tt[1] != -1))
                       if(cp_b >= lowest_len-1 && isEqual_vecstr(currentstr, array) == 1 && isEqual_vecstr(currentstr, find.words) == 0){
                       	append_vecstr(&find.words, currentstr);
                           appendint(&find.begin_pos, i*table.v+j);
@@ -173,6 +176,7 @@ words_t findwords_t(Table table, vecstr array){
                           
                           append_vecstr(&find.slides, get_vecstr(slides_name, current_slide));
                       	}
+                      free(xy_tt);
                  }
                  
                  free(currentstr);

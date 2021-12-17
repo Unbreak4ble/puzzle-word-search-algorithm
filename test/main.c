@@ -5,7 +5,7 @@ int main(){
 	
 	Table table = maketable(20, 20);
 	
-    fillrand_t(&table, "abcdefghijklmnopqrstuvwxyz"); // abcdefghijklmnopqrstuvwxyz aeiou
+     fillrand_t(&table, "abcdefghijklmnopqrstuvwxyz"); // abcdefghijklmnopqrstuvwxyz aeiou
 	
 	printTable(table);
 	printf("\n");

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdarg.h>
 #include "modernstring.h"
 
 typedef struct {
@@ -31,10 +32,14 @@ void clone_t(Table *dest, Table src){
     
 }
 
+int get_tlen(Table table){
+	return table.totalsize/sizeof(char);
+}
+
 void add_tval(Table *table, char c){
-	 if(table->totalsize <= table->v * table->h){
+	 if(table->totalsize <= (table->v * table->h)*sizeof(char)){
 	 appendchar(&table->table, c);
-	++table->totalsize;
+	table->totalsize += sizeof(char);
 	}
 }
 
@@ -64,15 +69,27 @@ int* toXY_t(Table t, int pos){
 	return res;
 }
 
+void add_more_tval(Table *table, int count, ...){
+	va_list chars;
+	va_start(chars, count);
+	
+	for(int i=0; i<count; i++)
+	add_tval(table, (char)va_arg(chars, int));
+	
+	va_end(chars); 
+}
+
 void printTable(Table table){
 	printf("[\n");
-	for(int i=0; i<table.v; i++){
-		for(int j=0; j<table.h; j++){
+	int *XY_t = toXY_t(table, table.totalsize/sizeof(char));
+	for(int i=0; i<XY_t[1]; i++){
+		for(int j=0; j<XY_t[0]; j++){
 			printf("%c", get_tval(table, i, j));
-			if(j != table.h-1)
+			if(j != XY_t[0]-1)
 			printf(" ");
 		}
 		printf("\n");
     }
+    free(XY_t);
 	printf("]\n");
 }
