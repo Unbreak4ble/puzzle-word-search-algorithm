@@ -56,6 +56,10 @@ void removeint(integer *val, int pos){
 	val->size -= 1;
 }
 
+void free_integer(integer *arr){
+	free(arr->values);
+}
+
 integer makeint(int *val, size_t size){
 	integer newinteger;
     newinteger.values = (int*)malloc(size);

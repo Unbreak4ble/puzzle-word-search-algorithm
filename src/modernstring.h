@@ -7,10 +7,10 @@
 /* STRING */
 void appendchar(string *str, char c){
 	if(str && c){
-	int lenstr = strlen(*str), lenc = 1, total = lenstr+lenc;
-    string newstr = (string)malloc(total);
-	memcpy(newstr, *str, total);
-    newstr[total-1] = c;
+	int lenstr = strlen(*str), lenc = sizeof(char), total = lenstr+lenc;
+    string newstr = (string)calloc(total, sizeof(char));
+	memcpy(newstr, *str, lenstr);
+    newstr[strlen(newstr)] = c;
       *str = realloc(*str, total);
       *str = newstr;
 	}
@@ -20,8 +20,8 @@ void appendstr(string *dest, string src){
 	if(dest && src){
 	int destlen = strlen(*dest), srclen = strlen(src), total = destlen+srclen;
 	if(srclen == 0) return;
-	string newstr = (string)malloc(total);
-	memcpy(newstr, *dest, total);
+	string newstr = (string)calloc(total, sizeof(char));
+	memcpy(newstr, *dest, destlen);
 	strcat(newstr, src);
     *dest = realloc(*dest, total);
     *dest = newstr;
@@ -32,9 +32,9 @@ void removechar(string *dest, int pos){
 	if(dest){
 	int lenstr = strlen(*dest)-1, cp=0;
 	if(!(pos >= 0 && pos <= lenstr)) return;
-    string newstr = (string)malloc(lenstr-1);
+    string newstr = (string)calloc(lenstr, sizeof(char));
     memset(newstr, 0, lenstr-1);
-    string destcp = (string)malloc(lenstr+1);
+    string destcp = (string)calloc(lenstr+1, sizeof(char));
     strcpy(destcp, *dest);
        for(int i=0; i<lenstr+1; i++){
        	if(i != pos){
@@ -45,12 +45,16 @@ void removechar(string *dest, int pos){
        }
         free(destcp);
         dest = realloc(dest, lenstr);
-        *dest = newstr;
+        memcpy(*dest, newstr, lenstr);
 	}
 }
 
+void free_str(string *str){
+	free(&str);
+}
+
 string makestr(string str){
-	string newstr = malloc(strlen(str));
+	string newstr = calloc(strlen(str), sizeof(char));
 	strcpy(newstr, str);
 	return newstr;
 }

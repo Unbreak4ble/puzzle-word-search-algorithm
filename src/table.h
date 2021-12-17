@@ -17,6 +17,10 @@ Table maketable(int v, int h){
 	return table;
 }
 
+void free_t(Table *t){
+	free(t->table);
+}
+
 void clone_t(Table *dest, Table src){
 	dest->v = src.v;
 	dest->h = src.h;
@@ -24,6 +28,7 @@ void clone_t(Table *dest, Table src){
     
     dest->table = realloc(dest->table, src.totalsize);
     memcpy(dest->table, src.table, src.totalsize);
+    
 }
 
 void add_tval(Table *table, char c){
@@ -39,6 +44,24 @@ void set_tval(Table *table, char c, int i, int j){
 
 char get_tval(Table table, int i, int j){
 	return table.table[i*(table.v >= table.h ? table.h : table.v) + j];
+}
+
+int* toXY_t(Table t, int pos){
+	int X=0, Y=pos;
+	int *res = (int*)calloc(2, sizeof(int));
+	res[0] = -1;
+	res[1] = -1;
+	for(int i=0; i<t.v; i++){
+		X = Y-t.v*i;
+		if(X >= 0 && X <= t.v)
+		{
+			res[0] = i+1;
+			res[1] = X;
+		    return res;
+		}
+	}
+	
+	return res;
 }
 
 void printTable(Table table){

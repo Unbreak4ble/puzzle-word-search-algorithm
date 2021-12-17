@@ -29,7 +29,7 @@ void append_vecstr(vecstr* arr, string str){
         memcpy(array, arr->array, arr->size-size);
 		strcat(array, str);
 		arr->array = realloc(arr->array, arr->size);
-		arr->array = array;
+		memcpy(arr->array, array, arr->size);
 	} 
 }
 
@@ -48,35 +48,16 @@ int get_sizevecstr(vecstr arr){
 	return arr.size;
 }
 
-int isEqual_vecstr(string str, vecstr array){
-	int len = strlen(str);
-	for(int i=0; i<get_lenvecstr(array); i++){
-		int len2 = get_lenstr(array, i);
-		if(len == len2){
-		int c=0;
-		for(int j=0; j<len2; j++){
-			if(str[j] == (get_vecstr(array, i))[j]){
-				++c;
-			}
-		}
-		if(c == len)
-		return 1;
-		}
-	}
-	
-	return 0;
-}
-
 string get_vecstr(vecstr arr, int pos){
 	if(pos >= 0 && pos <= arr.len-1)
     {
     	int begin=0;
-        string str = calloc(getint(arr.eachsize, pos), sizeof(char));
+        string str = makestr("");
     	for(int i=0; i<pos; i++)
     	    begin += getint(arr.eachsize, i);
         
         for(int i=0; i<getint(arr.eachsize, pos); i++)
-        	str[i] = arr.array[begin+i];
+            appendchar(&str, arr.array[begin+i]);
         
         return str;
     }
@@ -84,10 +65,17 @@ string get_vecstr(vecstr arr, int pos){
       return "\0";
 }
 
+void free_vecstr(vecstr *arr){
+	free(arr->array);
+	free_integer(&arr->eachsize);
+}
+
 void print_vecstr(vecstr arr){
 	printf("{");
 	for(int i=0; i<arr.len; i++){
-		printf("\"%s\"", get_vecstr(arr, i));
+		string val = get_vecstr(arr, i);
+		printf("\"%s\"", val);
+		free(val);
 		if(i+1<arr.len)
 		printf(", ");
 	}
