@@ -1,3 +1,6 @@
+# descrição
+Criei esse algoritmo para resolver problemas de caça palavras da escola
+
 # manual
 ### estruturas
 #### • words_t
