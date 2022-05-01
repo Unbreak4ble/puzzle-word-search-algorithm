@@ -50,7 +50,7 @@ void removechar(string *dest, int pos){
 }
 
 void free_str(string *str){
-	free(&str);
+	free(str);
 }
 
 string makestr(string str){
