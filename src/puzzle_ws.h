@@ -20,7 +20,7 @@ void fillrand_t(Table *table, string str){
 	srand(time(NULL));
 	while(table->totalsize < table->v * table->h){
 		int r = randint(strlen(str));
-		
+
         add_tval(table, str[r]);
 	}
 }
@@ -43,16 +43,18 @@ int* getword_pos_t(words_t words, int pos){
 int isEqual_vecstr(string str, vecstr array){
 	int len = strlen(str);
 	for(int i=0; i<get_lenvecstr(array); i++){
-		int len2 = get_lenstr(array, i);
+		int len2 = get_lenstr(array, i)+1;
+//printf("%d %d %s\n", len, len2, str);
 		if(len == len2){
+//printf("%s %d %d\n", str, len, len2);
 		string val = get_vecstr(array, i);
 		int c=0;
 		for(int j=0; j<len2; j++)
 			if(str[j] == val[j])
 				++c;
-		
+
 		free(val);
-		if(c == len)
+		if(c+1 == len)
 		return 1;
 		}
 	}
@@ -140,7 +142,9 @@ words_t findwords_t(Table table, vecstr array){
     append_vecstr(&slides_name, "bottom left");
     append_vecstr(&slides_name, "top right");
     append_vecstr(&slides_name, "top left");
-    
+    /*
+   {vertical, horizontal}
+    */
     const int slide_i[8][2] = {{0, -1}, {0, 1}, {1, 0}, {-1, 0}, {1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
     words_t find;
     find.words = makevecstr();
@@ -178,7 +182,7 @@ words_t findwords_t(Table table, vecstr array){
                       	}
                       free(xy_tt);
                  }
-                 
+  //               printf("%s\n", currentstr);
                  free(currentstr);
     	      }
                 ++current_slide;
