@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "puzzle_ws.h"
+#include "../src/puzzle_ws.h"
 
 int main(){
 	
